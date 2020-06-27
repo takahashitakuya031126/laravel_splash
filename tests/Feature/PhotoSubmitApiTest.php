@@ -4,24 +4,23 @@ namespace Tests\Feature;
 
 use App\Photo;
 use App\User;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Testing\imagecreatetruecolor;
+use Tests\TestCase;
 
 class PhotoSubmitApiTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function setUp(): void
     {
         parent::setUp();
         $this->user = factory(User::class)->create();
     }
-    
+
     public function testUpload()
     {
         Storage::fake('s3');
@@ -39,7 +38,7 @@ class PhotoSubmitApiTest extends TestCase
 
         Storage::cloud()->assertExists($photo->filename);
     }
-    
+
     public function testSave()
     {
         Schema::drop('photos');
@@ -55,7 +54,7 @@ class PhotoSubmitApiTest extends TestCase
 
         $this->assertEquals(0, count(Storage::cloud()->files()));
     }
-    
+
     public function testInsert()
     {
         Storage::shouldReceive('cloud')

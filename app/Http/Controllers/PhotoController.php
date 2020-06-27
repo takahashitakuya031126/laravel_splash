@@ -13,9 +13,17 @@ class PhotoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['index']);
     }
-    
+
+    public function index()
+    {
+        $photos = Photo::with(['owner'])
+            ->orderBy(Photo::CREATED_AT, 'desc')->paginate();
+
+        return $photos;
+    }
+
     public function create(StorePhoto $request)
     {
         $extension = $request->photo->extension();

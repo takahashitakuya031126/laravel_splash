@@ -4,13 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class Photo extends Model
 {
     protected $keyType = 'string';
-    
+
+    protected $visible = [
+        'id', 'owner', 'url',
+    ];
+
+    protected $appends = [
+        'url',
+    ];
+
     const ID_LENGTH = 12;
-    
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -19,12 +28,12 @@ class Photo extends Model
             $this->setId();
         }
     }
-    
+
     private function setId()
     {
         $this->attributes['id'] = $this->getRandomId();
     }
-    
+
     private function getRandomId()
     {
         $characters = array_merge(
@@ -41,5 +50,15 @@ class Photo extends Model
         }
 
         return $id;
+    }
+
+    public function getUrlAttribute()
+    {
+        return Storage::cloud()->url($this->attributes['filename']);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo('App\User', 'user_id', 'id', 'users');
     }
 }
