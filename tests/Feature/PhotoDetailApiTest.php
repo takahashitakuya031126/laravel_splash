@@ -12,7 +12,7 @@ class PhotoDetailApiTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testJSON()
+    public function testPhotoDetailJson()
     {
         factory(Photo::class)->create();
         $photo = Photo::first();
