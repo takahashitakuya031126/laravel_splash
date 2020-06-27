@@ -5,17 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class Photo extends Model
 {
     protected $keyType = 'string';
 
     protected $visible = [
-        'id', 'owner', 'url', 'comments',
+        'id', 'owner', 'url', 'comments', 'likes_count', 'liked_by_user',
     ];
 
     protected $appends = [
-        'url',
+        'url', 'likes_count', 'liked_by_user',
     ];
 
     const ID_LENGTH = 12;
@@ -50,6 +51,22 @@ class Photo extends Model
         }
 
         return $id;
+    }
+
+    public function getLikesCountAttribute()
+    {
+        return $this->likes->count();
+    }
+
+    public function getLikedByUserAttribute()
+    {
+        if (Auth::guest()) {
+            return false;
+        }
+
+        return $this->likes->contains(function ($user) {
+            return $user->id === Auth::user()->id;
+        });
     }
 
     public function getUrlAttribute()
