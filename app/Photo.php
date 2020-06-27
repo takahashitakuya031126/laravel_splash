@@ -66,4 +66,9 @@ class Photo extends Model
     {
         return $this->hasMany('App\Comment')->orderBy('id', 'desc');
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany('App\User', 'likes')->withTimestamps();
+    }
 }
