@@ -26,6 +26,14 @@ class PhotoController extends Controller
         return $photos;
     }
 
+    public function show(string $id)
+    {
+        $photo = Photo::where('id', $id)
+            ->with(['owner', 'comments.author', 'likes'])->first();
+
+            return $photo ?? abort(404);
+    }
+
     public function create(StorePhoto $request)
     {
         $extension = $request->photo->extension();
@@ -64,14 +72,6 @@ class PhotoController extends Controller
         ];
 
         return response(Storage::cloud()->get($photo->filename), 200, $headers);
-    }
-
-    public function show(string $id)
-    {
-        $photo = Photo::where('id', $id)
-            ->with(['owner', 'comments.author', 'likes'])->first();
-
-            return $photo ?? abort(404);
     }
 
     public function addComment(Photo $photo, StoreComment $request)

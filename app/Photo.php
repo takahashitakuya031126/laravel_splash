@@ -53,6 +53,11 @@ class Photo extends Model
         return $id;
     }
 
+    public function getUrlAttribute()
+    {
+        return Storage::cloud()->url($this->attributes['filename']);
+    }
+
     public function getLikesCountAttribute()
     {
         return $this->likes->count();
@@ -67,11 +72,6 @@ class Photo extends Model
         return $this->likes->contains(function ($user) {
             return $user->id === Auth::user()->id;
         });
-    }
-
-    public function getUrlAttribute()
-    {
-        return Storage::cloud()->url($this->attributes['filename']);
     }
 
     public function owner()
