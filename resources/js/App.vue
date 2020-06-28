@@ -40,7 +40,7 @@ export default {
           this.$store.commit('auth/setUser', null)
           this.$router.push('/login')
         } else if (val === NOT_FOUND) {
-          this.$router.push('/not-found')
+          this.$router.push('/')
         }
       },
       immediate: true
